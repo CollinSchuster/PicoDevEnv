@@ -1,4 +1,7 @@
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 #include "font.h"
 #include <string.h> // for memset
 #include "ssd1306.h"
@@ -10,13 +13,17 @@
 #include "hardware/spi.h"
 #include "hardware/adc.h"
 #include "hardware/clocks.h"
+<<<<<<< Updated upstream
 #include "hardware/uart.h"
 #include "hardware/irq.h" // for the interrupt system
+=======
+>>>>>>> Stashed changes
 
 #define CHAR_WIDTH 5
 #define CHAR_HEIGHT 8
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 32
+<<<<<<< Updated upstream
 #define UART_ID uart0
 #define BAUD_RATE 115200
 #define DATA_BITS 8
@@ -33,6 +40,15 @@ unsigned char SSD1306_ADDRESS = 0b0111100; // 7bit i2c address
 unsigned char ssd1306_buffer[513];         // 128x32/8. Every bit is a pixel except first byte
 
 // // Function to initialize I2C communication
+=======
+
+unsigned char set = 5;
+
+unsigned char SSD1306_ADDRESS = 0b0111100; // 7bit i2c address
+unsigned char ssd1306_buffer[513];         // 128x32/8. Every bit is a pixel except first byte
+
+// Function to initialize I2C communication
+>>>>>>> Stashed changes
 void init_i2c()
 {
   i2c_init(i2c_default, 100 * 1000); // Initialize I2C at 100kHz
@@ -81,6 +97,15 @@ void ssd1306_setup()
 // send a command instruction (not pixel data)
 void ssd1306_command(unsigned char c)
 {
+<<<<<<< Updated upstream
+=======
+  // i2c_master_start();
+  // i2c_master_send(ssd1306_write);
+  // i2c_master_send(0x00); // bit 7 is 0 for Co bit (data bytes only), bit 6 is 0 for DC (data is a command))
+  // i2c_master_send(c);
+  // i2c_master_stop();
+
+>>>>>>> Stashed changes
   uint8_t buf[2];
   buf[0] = 0x00;
   buf[1] = c;
@@ -167,6 +192,7 @@ void ssd1306_drawPixel(unsigned char x, unsigned char y, unsigned char color)
     ssd1306_buffer[1 + x + (y / 8) * 128] &= ~(1 << (y & 7));
   }
 }
+<<<<<<< Updated upstream
 
 // RX interrupt handler
 void on_uart_rx()
@@ -197,11 +223,16 @@ void on_uart_rx()
     ssd1306_update();
   }
 }
+=======
+>>>>>>> Stashed changes
 
 int main()
 {
   stdio_init_all(); // Initialize UART for input/output
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
   init_i2c();
   ssd1306_setup(); // Initialize SSD1306 display
 
@@ -210,6 +241,7 @@ int main()
   adc_gpio_init(26);   // Use GPIO26 as ADC pin
   adc_select_input(0); // Select ADC0 as input
 
+<<<<<<< Updated upstream
   uart_init(UART_ID, 2400);
 
   gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART); // Set the TX and RX pins by using the function select on the GPIO
@@ -243,10 +275,66 @@ int main()
   // Send a basic string out, and then run a loop and wait for RX interrupts
   // The handler will count them, but also reflect the incoming data back with a slight change!
   uart_puts(UART_ID, "\nHello, uart interrupts\n");
+=======
+  sleep_ms(10000); // Sleep for 5 seconds
+>>>>>>> Stashed changes
 
   char input[100] = "Hello World"; // Default string
   char fps_str[20];
 
+<<<<<<< Updated upstream
   while (1)
     tight_loop_contents();
+=======
+  // Ask the user for input
+  printf("Enter a string: ");
+  scanf("%s", input);
+
+  unsigned int last_time = to_us_since_boot(get_absolute_time());
+  unsigned int frame_count = 0;
+
+  while (true)
+  {
+    // Draw the input string on the screen
+    int startX = 10; // Starting X coordinate for drawing
+    int startY = 10; // Starting Y coordinate for drawing
+    int fpsX = 50;
+    int fpsY = 20;
+    int spacing = (2 + CHAR_WIDTH); // CHAR_WIDTH + 1; // Spacing between characters
+
+    for (int i = 0; input[i] != '\0'; ++i)
+    {
+      drawChar(startX + (i * spacing), startY, input[i]);
+    }
+
+    // Update the display with the new content
+    ssd1306_update();
+
+    // Calculate FPS
+    unsigned int current_time = to_us_since_boot(get_absolute_time());
+    unsigned int elapsed_time = current_time - last_time;
+
+    if (elapsed_time >= 1000000)
+    {                                                                      // Update fps every second
+      float fps = (float)frame_count / ((float)elapsed_time / 1000000.0f); // Calculate frames per second
+      snprintf(fps_str, sizeof(fps_str), " fps: %.2f", fps);
+      // strcat(input, fps_str);  // Append fps to input string
+      frame_count = 0;          // Reset frame count
+      last_time = current_time; // Update last time
+    }
+    else
+    {
+      frame_count++; // Increment frame count
+    }
+    frame_count++;
+    for (int i = 0; fps_str[i] != '\0'; ++i)
+    {
+      drawChar(fpsX + (i * spacing), fpsY, fps_str[i]);
+    }
+    ssd1306_update();
+    // ssd1306_clear();
+  }
+
+  return 0;
+>>>>>>> Stashed changes
 }

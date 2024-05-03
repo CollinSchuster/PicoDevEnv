@@ -15,7 +15,11 @@ add_executable(hello_world
 )
 
 # Add pico_stdlib library which aggregates commonly used features
+<<<<<<< Updated upstream
 target_link_libraries(hello_world pico_stdlib hardware_i2c hardware_spi hardware_adc hardware_uart)
+=======
+target_link_libraries(hello_world pico_stdlib hardware_i2c hardware_spi hardware_adc)
+>>>>>>> Stashed changes
 
 # create map/bin/hex/uf2 file in addition to ELF.
 pico_add_extra_outputs(hello_world)
