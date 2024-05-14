@@ -16,7 +16,7 @@ void initializePWM()
 {
   gpio_set_function(LEDPin, GPIO_FUNC_PWM);       // Set the LED Pin to be PWM
   uint slice_num = pwm_gpio_to_slice_num(LEDPin); // Get PWM slice number
-  float div = 40;                                 // must be between 1-255 for 50Hz
+  float div = 40;                                 // must be between 1-255 for 50Hz (40)
   pwm_set_clkdiv(slice_num, div);                 // divider
   uint16_t wrap = 62500;                          // when to rollover, must be less than 65535
   pwm_set_wrap(slice_num, wrap);
